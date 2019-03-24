@@ -22,7 +22,7 @@ return array(
     'APP_SUB_DOMAIN_DEPLOY'  => false, // 是否开启子域名部署
     'APP_SUB_DOMAIN_RULES'   => array(), // 子域名部署规则
     'APP_DOMAIN_SUFFIX'      => '', // 域名后缀 如果是com.cn net.cn 之类的后缀必须设置
-    'ACTION_SUFFIX'          => '', // 操作方法后缀
+    'ACTION_SUFFIX'          => 'Action', // 操作方法后缀
     'MULTI_MODULE'           => true, // 是否允许多模块 如果为false 则必须设置 DEFAULT_MODULE
     'MODULE_DENY_LIST'       => array('Common', 'Runtime'),
     'CONTROLLER_LEVEL'       => 1,
