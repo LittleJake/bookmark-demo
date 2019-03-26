@@ -16,5 +16,7 @@ use Think\Model;
 
 class UserModel extends Model
 {
-
+    protected $patchValidate = true;
+    protected $field = array('id', 'email', 'pass', 'username');
+    protected $pk = 'id';
 }
