@@ -10,13 +10,12 @@
  */
 namespace Home\Controller;
 
-use Think\Controller;
-
-class UserController extends Controller
+class UserController extends BaseController
 {
     //登录
     public function loginAction()
     {
+        $this->assign('page_title', '登录');
         return $this->display();
     }
 

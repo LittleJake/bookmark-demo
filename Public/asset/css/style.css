@@ -1,0 +1,13 @@
+.footer {
+    padding: 50px 0;
+    background-color: #3c3c3c;
+}
+
+/*
+*  .footer a 为footer类下所有a
+*  .footer > a 为footer级的儿子a
+*/
+
+.footer a {
+    color: white;
+}

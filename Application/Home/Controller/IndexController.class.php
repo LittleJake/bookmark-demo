@@ -1,14 +1,14 @@
 <?php
 namespace Home\Controller;
 
-use Think\Controller;
-use Home\Model\UserModel;
-class IndexController extends Controller
+class IndexController extends BaseController
 {
 
     //推荐书签
     public function indexAction()
     {
+        dump($this->isLogin());
+        exit();
         $rule = array(
             array('email', 'email', '错误的邮箱', 1, 'unique', 1),
             array('repass', 'pass', '两次密码不一致', 1, 'confirm', 1),
