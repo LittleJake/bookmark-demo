@@ -1,0 +1,26 @@
+<include file="Common/header" />
+<div class="container">
+    <table>
+        <thead>
+            <th>#</th>
+            <th>备注名</th>
+            <th>网址</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+        {foreach $bookmarks as $k}
+            <tr>
+                <td>$k.id</td>
+                <td>$k.title</td>
+                <td>$k.url</td>
+                <td>
+                    <a href="{:U('user/delBookmark', ['id' => $k.id])}">删除</a>
+                    <a href="{:U('user/changeBookmark', ['id' => $k.id])}">修改</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+
+<include file="Common/footer" />

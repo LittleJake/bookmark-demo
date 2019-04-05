@@ -44,18 +44,21 @@ class UserController extends BaseController
     //注册
     public function regAction()
     {
+        $this->assign('page_title', '注册');
         return $this->display();
     }
 
     //忘记密码
     public function forgotAction()
     {
+        $this->assign('page_title', '忘记密码');
         return $this->display();
     }
 
     //添加书签
     public function addBookmarkAction()
     {
+        $this->assign('page_title', '增加书签');
         return $this->display();
 
     }
@@ -63,6 +66,8 @@ class UserController extends BaseController
     //修改书签
     public function changeBookmarkAction()
     {
+
+        $this->assign('page_title', '书签修改');
         return $this->display();
 
     }
@@ -70,6 +75,8 @@ class UserController extends BaseController
     //删除书签
     public function delBookmarkAction()
     {
+
+        $this->assign('page_title', '删除书签');
         return $this->display();
 
     }
@@ -77,6 +84,8 @@ class UserController extends BaseController
     //书签列表
     public function listBookmarkAction()
     {
+
+        $this->assign('page_title', '书签列表');
         return $this->display();
 
     }
