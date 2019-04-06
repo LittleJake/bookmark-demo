@@ -37,6 +37,10 @@ class UserController extends BaseController
         else
             exit($user->getError());
         */
+        if($this->isLogin())
+            return $this->redirect('user/listBookmark');
+
+
         $this->assign('page_title', '登录');
         return $this->display();
     }
@@ -44,6 +48,10 @@ class UserController extends BaseController
     //注册
     public function regAction()
     {
+        if($this->isLogin())
+            return $this->redirect('user/listBookmark');
+
+
         $this->assign('page_title', '注册');
         return $this->display();
     }
@@ -51,6 +59,9 @@ class UserController extends BaseController
     //忘记密码
     public function forgotAction()
     {
+        if($this->isLogin())
+            return $this->redirect('user/listBookmark');
+
         $this->assign('page_title', '忘记密码');
         return $this->display();
     }
@@ -58,6 +69,10 @@ class UserController extends BaseController
     //添加书签
     public function addBookmarkAction()
     {
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
+
+
         $this->assign('page_title', '增加书签');
         return $this->display();
 
@@ -66,6 +81,8 @@ class UserController extends BaseController
     //修改书签
     public function changeBookmarkAction()
     {
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
 
         $this->assign('page_title', '书签修改');
         return $this->display();
@@ -75,6 +92,8 @@ class UserController extends BaseController
     //删除书签
     public function delBookmarkAction()
     {
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
 
         $this->assign('page_title', '删除书签');
         return $this->display();
@@ -84,6 +103,8 @@ class UserController extends BaseController
     //书签列表
     public function listBookmarkAction()
     {
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
 
         $this->assign('page_title', '书签列表');
         return $this->display();
