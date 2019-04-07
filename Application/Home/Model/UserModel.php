@@ -18,4 +18,5 @@ class UserModel extends Model
 {
     protected $field = array('id', 'email', 'pass', 'username');
     protected $pk = 'id';
+
 }
