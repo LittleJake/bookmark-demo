@@ -110,5 +110,9 @@ class UserController extends BaseController
         return $this->display();
 
     }
+
+    public function bookmarkHandlerAction(){
+
+    }
 }
 
