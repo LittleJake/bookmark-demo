@@ -1,0 +1,29 @@
+<include file="Common/header" />
+<div class="container">
+    <div class="col-md-6">
+        <h3>{$page_title}</h3>
+        <hr>
+        <form method="post" action="{:U('user/bookmarkHandler')}">
+
+            <input name="type" value="{$type}" hidden>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <label class="input-group-addon">标题</label>
+                    <input name="title" class="form-control" type="text" value="{}" placeholder="标题">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <label class="input-group-addon">URL</label>
+                    <input name="url" class="form-control" type="text" value="{}" placeholder="URL">
+                </div>
+            </div>
+            <!-- url 编码处理 -->
+            <hr>
+            <input class="btn btn-default" type="submit" value="提交">
+        </form>
+    </div>
+</div>
+<include file="Common/footer" />

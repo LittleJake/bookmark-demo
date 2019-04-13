@@ -43,23 +43,19 @@ class UserController extends BaseController
 
 
         if(IS_POST){
-            $username = I('post.username', '');
             $password = I('post.password', '');
-            $repassword = I('post.repassword', '');
             $email = I('post.email', '');
 
 
             $rule = array(
-                array('email', 'email', '错误的邮箱', 1, 'unique', 1),
-                array('repass', 'pass', '两次密码不一致', 1, 'confirm', 1),
-                array('username', 'require', '账号已存在', 1, 'unique', 1)
+                array('email', 'email', '错误的邮箱', 1),
+                array('pass', 'require', '密码错误', 1),
             );
 
 
             $user = D('user');
             $data['pass'] = $password;
-            $data['repass'] = $repassword;
-            $data['username'] = $username;
+
             $data['email'] = $email;
 
             //if($user->validate($rule)->create($data, 1))
@@ -143,29 +139,40 @@ class UserController extends BaseController
     }
 
     //添加书签
-    public function addBookmarkAction()
+    public function bookmarkAction()
     {
-        if(!$this->isLogin())
-            return $this->redirect('user/login');
+//        if(!$this->isLogin())
+//            return $this->redirect('user/login');
 
-        if(IS_POST){}
+        $a = I('type');
 
-        $this->assign('page_title', '增加书签');
+        if(IS_POST) {}
+
+        $id = I('id');
+
+        if($a == 'add'){
+
+
+            $this->assign('type', 'add');
+            $this->assign('page_title', '增加书签');
+        } else if($a == 'change') {
+            if(empty($id))
+                redirect(U('user/listBookmark'));
+
+
+            $this->assign('type', 'change');
+            $this->assign('page_title', '书签修改');
+
+        } else {
+
+            return redirect(U('user/listBookmark'));
+        }
+
+
+
+
+
         return $this->display();
-
-    }
-
-    //修改书签
-    public function changeBookmarkAction()
-    {
-        if(!$this->isLogin())
-            return $this->redirect('user/login');
-
-        if(IS_POST){}
-
-        $this->assign('page_title', '书签修改');
-        return $this->display();
-
     }
 
     //书签列表
@@ -177,6 +184,10 @@ class UserController extends BaseController
         $this->assign('page_title', '书签列表');
         return $this->display();
 
+    }
+
+    public function indexAction(){
+        redirect('user/listBookmark');
     }
 
     public function bookmarkHandlerAction(){
