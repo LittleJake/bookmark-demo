@@ -18,4 +18,12 @@ class IndexController extends BaseController
         return $this->display();
     }
 
+    //about
+    public function aboutAction(){
+
+
+        $this->assign( 'page_title', '关于');
+        return $this->display();
+    }
+
 }
