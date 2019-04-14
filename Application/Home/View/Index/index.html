@@ -17,7 +17,7 @@
                         <a href="{$k.url}" target="_blank">{$k.url}</a>
                     </td>
                     <td>
-                        <a href="{:U('user/addBookmark', ['url' => urlencode($k[url])])}" class="btn btn-default">加入书签</a>
+                        <a href="{:U('user/bookmark', ['url' => urlencode($k[url]), 'type' => 'add'])}" class="btn btn-default btn-xs">加入书签</a>
                     </td>
                 </tr>
             </foreach>
