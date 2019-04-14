@@ -45,22 +45,22 @@ class UserController extends BaseController
         if(IS_POST){
             $password = I('post.password', '');
             $email = I('post.email', '');
+            if(!empty($password) && !empty($email)) {
+                $user = D('user');
 
-            $user = D('user');
+                $query = $user->getByEmail($email);
 
-            $query = $user->getByEmail($email);
+                if (empty($query))
+                    return $this->error('错误邮箱');
 
-            if(empty($query))
-                return $this->error('错误邮箱');
-
-            if($query['pass'] == $this->secret($password))
-            {
-                session('user_id', $query['id']);
-                return $this->success("$query[username]欢迎回来", U('user/index'));
+                if ($query['pass'] == $this->secret($password)) {
+                    session('user_id', $query['id']);
+                    return $this->success("$query[username]欢迎回来", U('user/index'));
+                } else
+                    return $this->error('错误密码');
             }
             else
-                return $this->error('错误密码');
-
+                return $this->error('错误');
 
         }
 
@@ -81,28 +81,28 @@ class UserController extends BaseController
             $repassword = I('post.repassword', '');
             $email = I('post.email', '');
 
+            if(!empty($password) && !empty($username) && !empty($repassword) && !empty($email)) {
+                $rule = array(
+                    array('email', 'email', '错误的邮箱', 1, 'unique', 1),
+                    array('repass', 'pass', '两次密码不一致', 1, 'confirm', 1),
+                    array('username', 'require', '账号已存在', 1, 'unique', 1)
+                );
 
-            $rule = array(
-                array('email', 'email', '错误的邮箱', 1, 'unique', 1),
-                array('repass', 'pass', '两次密码不一致', 1, 'confirm', 1),
-                array('username', 'require', '账号已存在', 1, 'unique', 1)
-            );
 
+                $user = D('user');
+                $data['pass'] = $this->secret($password);
+                $data['repass'] = $this->secret($repassword);
+                $data['username'] = $username;
+                $data['email'] = $email;
 
-            $user = D('user');
-            $data['pass'] = $this->secret($password);
-            $data['repass'] = $this->secret($repassword);
-            $data['username'] = $username;
-            $data['email'] = $email;
-
-            if($user->validate($rule)->create($data, 1))
-            {
-                $user->data($data)->add();
-                return $this->success('注册成功', U('user/login'));
+                if ($user->validate($rule)->create($data, 1)) {
+                    $user->data($data)->add();
+                    return $this->success('注册成功', U('user/login'));
+                } else
+                    return $this->error($user->getError());
             }
             else
-                return $this->error($user->getError());
-
+                return $this->error('错误');
         }
 
         $this->assign('page_title', '注册');
@@ -117,27 +117,27 @@ class UserController extends BaseController
 
         if(IS_POST){
             $username = I('post.username', '');
-            $password = I('post.password', '');
-            $repassword = I('post.repassword', '');
             $email = I('post.email', '');
 
 
-            $rule = array(
-                array('email', 'email', '错误的邮箱', 1, 'unique', 1),
-                array('repass', 'pass', '两次密码不一致', 1, 'confirm', 1),
-                array('username', 'require', '账号已存在', 1, 'unique', 1)
-            );
 
+            if(!empty($username) && !empty($email)){
+                $user = D('user');
+                $con['username'] = $username;
+                $con['email'] = $email;
+                $query = $user->where($con)->find();
 
-            $user = D('user');
-            $data['pass'] = $password;
-            $data['repass'] = $repassword;
-            $data['username'] = $username;
-            $data['email'] = $email;
+                if(!empty($query))
+                {
+                    $query['pass'] = $this->secret($this->r(10));
+                    $user -> where($con)->save($query);
 
-            //if($user->validate($rule)->create($data, 1))
-            //    $user->data($data)->add();
+                }
 
+                return $this->success('如果信息正确，您会收到一封包含临时密码的邮件', U('user/login'));
+            }
+            else
+                return $this->error('错误');
         }
 
         $this->assign('page_title', '忘记密码');

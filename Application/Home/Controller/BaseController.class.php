@@ -33,4 +33,14 @@ class BaseController extends Controller
     protected function secret($pass) {
         return md5('salt' . $pass);
     }
+
+    protected function r($n) {
+        $str = 'abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ!@#$%^&*()1234567890';
+
+        $s = '';
+        for($i = 0; $i < $n; $i++)
+            $s .= substr($str,rand(0, strlen($str)-1),1);
+
+        return $s;
+    }
 }
