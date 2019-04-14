@@ -46,20 +46,21 @@ class UserController extends BaseController
             $password = I('post.password', '');
             $email = I('post.email', '');
 
-
-            $rule = array(
-                array('email', 'email', '错误的邮箱', 1),
-                array('pass', 'require', '密码错误', 1),
-            );
-
-
             $user = D('user');
-            $data['pass'] = $password;
 
-            $data['email'] = $email;
+            $query = $user->getByEmail($email);
 
-            //if($user->validate($rule)->create($data, 1))
-            //    $user->data($data)->add();
+            if(empty($query))
+                return $this->error('错误邮箱');
+
+            if($query['pass'] == $this->secret($password))
+            {
+                session('user_id', $query['id']);
+                return $this->success("$query[username]欢迎回来", U('user/index'));
+            }
+            else
+                return $this->error('错误密码');
+
 
         }
 
@@ -89,13 +90,18 @@ class UserController extends BaseController
 
 
             $user = D('user');
-            $data['pass'] = $password;
-            $data['repass'] = $repassword;
+            $data['pass'] = $this->secret($password);
+            $data['repass'] = $this->secret($repassword);
             $data['username'] = $username;
             $data['email'] = $email;
 
             if($user->validate($rule)->create($data, 1))
+            {
                 $user->data($data)->add();
+                return $this->success('注册成功', U('user/login'));
+            }
+            else
+                return $this->error($user->getError());
 
         }
 
@@ -187,12 +193,17 @@ class UserController extends BaseController
     }
 
     public function indexAction(){
-        redirect('user/listBookmark');
+        redirect('listBookmark');
     }
 
     public function bookmarkHandlerAction(){
         if(IS_POST){}
 
+    }
+
+    public function logoutAction(){
+        session('user_id', null);
+        return $this->success('退出', U('index/index'));
     }
 }
 

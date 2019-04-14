@@ -21,6 +21,5 @@ class BookmarkModel extends Model
     protected $_validate = array(
         array('title', 'require', '标题错误'),
         array('content', 'url', '错误url')
-
     );
 }

@@ -7,6 +7,7 @@ class IndexController extends BaseController
     //推荐书签
     public function indexAction()
     {
+        $this ->isLogin();
 
         $bookmarks = array(array(
             'id' => '1',
