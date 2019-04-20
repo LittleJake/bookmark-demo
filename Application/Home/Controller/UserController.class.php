@@ -39,7 +39,7 @@ class UserController extends BaseController
         */
 
         if($this->isLogin())
-            return $this->redirect('user/listBookmark');
+            return $this->redirect('listBookmark');
 
 
         if(IS_POST){
@@ -55,7 +55,7 @@ class UserController extends BaseController
 
                 if ($query['pass'] == $this->secret($password)) {
                     session('user_id', $query['id']);
-                    return $this->success("$query[username]欢迎回来", U('user/index'));
+                    return $this->success("$query[username]，欢迎回来", 'index');
                 } else
                     return $this->error('错误密码');
             }
@@ -73,7 +73,7 @@ class UserController extends BaseController
     public function regAction()
     {
         if($this->isLogin())
-            return $this->redirect('user/listBookmark');
+            return $this->redirect('listBookmark');
 
         if(IS_POST){
             $username = I('post.username', '');
@@ -97,7 +97,7 @@ class UserController extends BaseController
 
                 if ($user->validate($rule)->create($data, 1)) {
                     $user->data($data)->add();
-                    return $this->success('注册成功', U('user/login'));
+                    return $this->success('注册成功', 'user/login');
                 } else
                     return $this->error($user->getError());
             }
@@ -113,7 +113,7 @@ class UserController extends BaseController
     public function forgotAction()
     {
         if($this->isLogin())
-            return $this->redirect('user/listBookmark');
+            return $this->redirect('listBookmark');
 
         if(IS_POST){
             $username = I('post.username', '');
@@ -134,7 +134,7 @@ class UserController extends BaseController
                     //邮件处
                 }
 
-                return $this->success('如果信息正确，您会收到一封包含临时密码的邮件', U('user/login'));
+                return $this->success('如果信息正确，您会收到一封包含临时密码的邮件', 'user/login');
             }
             else
                 return $this->error('错误');
@@ -153,14 +153,16 @@ class UserController extends BaseController
         $a = I('type', '');
         $id = I('id', '');
 
+
         if($a == 'add'){
+            $data['url'] = urldecode(I('url', ''));
 
-
+            $this->assign('data', $data);
             $this->assign('type', 'add');
             $this->assign('page_title', '增加书签');
         } else if($a == 'change') {
             if(empty($id))
-                return $this->redirect(U('user/listBookmark'));
+                return $this->redirect('listBookmark');
 
             $bookmark = D('bookmark');
             $con['id'] = $id;
@@ -169,15 +171,16 @@ class UserController extends BaseController
             $data = $bookmark->where($con)->find();
 
             if(empty($data))
-                return $this->redirect(U('user/listBookmark'));
+                return $this->redirect('listBookmark');
 
+            $data['url'] = urldecode($data['url']);
 
             $this->assign('data', $data);
             $this->assign('type', 'change');
             $this->assign('page_title', '书签修改');
 
         } else {
-            return $this->redirect(U('user/listBookmark'));
+            return $this->redirect('user/listBookmark');
         }
 
 
@@ -193,20 +196,28 @@ class UserController extends BaseController
         if(!$this->isLogin())
             return $this->redirect('user/login');
 
+        $bookmark = D('bookmark');
+        $con['user_id'] = session('user_id');
+        $data = $bookmark -> where($con)->select();
+
+        $this ->assign('bookmarks', $data);
         $this->assign('page_title', '书签列表');
         return $this->display();
 
     }
 
     public function indexAction(){
-        return $this->redirect(U('user/listBookmark'));
+        return $this->redirect('listBookmark');
     }
 
     public function bookmarkHandlerAction(){
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
+
         if(IS_POST){
             $type = I('post.type', '');
             if(empty($type))
-                return $this->redirect(U('user/listBookmark'));
+                return $this->redirect('listBookmark');
 
             $title = I('post.title', '');
             $url = I('post.url', '');
@@ -214,7 +225,7 @@ class UserController extends BaseController
             $user_id = session('user_id');
             $rule = array(
                 array('url', 'url', '错误的URL', 1),
-                array('title', array(1, 50), '标题错误', 1, 'length')
+                array('title', '1,50', '标题错误', 1, 'length')
             );
 
             $data['title'] = $title;
@@ -230,13 +241,15 @@ class UserController extends BaseController
                 return $this->error($bookmark->getError());
 
             if($type == 'add'){
+                $data['url'] = urlencode($data['url']);
                 $bookmark->add($data);
             }
             else if($type == 'change') {
+                $data['url'] = urlencode($data['url']);
                 $bookmark->where($con)->save($data);
             }
 
-            return $this->success('成功', U('user/listBookmark'));
+            return $this->success('成功', 'listBookmark');
 
         }
 
@@ -244,7 +257,21 @@ class UserController extends BaseController
 
     public function logoutAction(){
         session('user_id', null);
-        return $this->success('退出', U('index/index'));
+        return $this->success('退出', 'index/index');
+    }
+
+    public function delBookmarkAction(){
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
+
+        $con['user_id'] = session('user_id');
+        $con['id'] = I('id', '');
+
+        $bookmark = D('bookmark');
+        if($bookmark -> where($con) ->delete())
+            return $this->success('成功');
+
+        return $this->error('错误');
     }
 }
 
