@@ -147,11 +147,11 @@ class UserController extends BaseController
     //添加书签
     public function bookmarkAction()
     {
-//        if(!$this->isLogin())
-//            return $this->redirect('user/login');
+        if(!$this->isLogin())
+            return $this->redirect('user/login');
 
-        $a = I('type');
-        $id = I('id');
+        $a = I('type', '');
+        $id = I('id', '');
 
         if($a == 'add'){
 
@@ -161,7 +161,6 @@ class UserController extends BaseController
         } else if($a == 'change') {
             if(empty($id))
                 return $this->redirect(U('user/listBookmark'));
-
 
             $bookmark = D('bookmark');
             $con['id'] = $id;
@@ -178,7 +177,6 @@ class UserController extends BaseController
             $this->assign('page_title', '书签修改');
 
         } else {
-
             return $this->redirect(U('user/listBookmark'));
         }
 
@@ -206,13 +204,13 @@ class UserController extends BaseController
 
     public function bookmarkHandlerAction(){
         if(IS_POST){
-            $type = I('post.type');
+            $type = I('post.type', '');
             if(empty($type))
                 return $this->redirect(U('user/listBookmark'));
 
-            $title = I('post.title');
-            $url = I('post.url');
-            $id = I('post.id');
+            $title = I('post.title', '');
+            $url = I('post.url', '');
+            $id = I('post.id', '');
             $user_id = session('user_id');
             $rule = array(
                 array('url', 'url', '错误的URL', 1),
