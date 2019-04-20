@@ -131,7 +131,7 @@ class UserController extends BaseController
                 {
                     $query['pass'] = $this->secret($this->r(10));
                     $user -> where($con)->save($query);
-
+                    //邮件处
                 }
 
                 return $this->success('如果信息正确，您会收到一封包含临时密码的邮件', U('user/login'));
@@ -151,9 +151,6 @@ class UserController extends BaseController
 //            return $this->redirect('user/login');
 
         $a = I('type');
-
-        if(IS_POST) {}
-
         $id = I('id');
 
         if($a == 'add'){
@@ -163,15 +160,26 @@ class UserController extends BaseController
             $this->assign('page_title', '增加书签');
         } else if($a == 'change') {
             if(empty($id))
-                redirect(U('user/listBookmark'));
+                return $this->redirect(U('user/listBookmark'));
 
 
+            $bookmark = D('bookmark');
+            $con['id'] = $id;
+            $con['user_id'] = session('user_id');
+
+            $data = $bookmark->where($con)->find();
+
+            if(empty($data))
+                return $this->redirect(U('user/listBookmark'));
+
+
+            $this->assign('data', $data);
             $this->assign('type', 'change');
             $this->assign('page_title', '书签修改');
 
         } else {
 
-            return redirect(U('user/listBookmark'));
+            return $this->redirect(U('user/listBookmark'));
         }
 
 
@@ -193,11 +201,46 @@ class UserController extends BaseController
     }
 
     public function indexAction(){
-        redirect('listBookmark');
+        return $this->redirect(U('user/listBookmark'));
     }
 
     public function bookmarkHandlerAction(){
-        if(IS_POST){}
+        if(IS_POST){
+            $type = I('post.type');
+            if(empty($type))
+                return $this->redirect(U('user/listBookmark'));
+
+            $title = I('post.title');
+            $url = I('post.url');
+            $id = I('post.id');
+            $user_id = session('user_id');
+            $rule = array(
+                array('url', 'url', '错误的URL', 1),
+                array('title', array(1, 50), '标题错误', 1, 'length')
+            );
+
+            $data['title'] = $title;
+            $data['url'] = $url;
+            $data['user_id'] = $user_id;
+
+            $con['user_id'] = $user_id;
+            $con['id'] = $id;
+
+            $bookmark = D('bookmark');
+
+            if (!$bookmark->validate($rule)->create($data))
+                return $this->error($bookmark->getError());
+
+            if($type == 'add'){
+                $bookmark->add($data);
+            }
+            else if($type == 'change') {
+                $bookmark->where($con)->save($data);
+            }
+
+            return $this->success('成功', U('user/listBookmark'));
+
+        }
 
     }
 

@@ -6,18 +6,19 @@
         <form method="post" action="{:U('user/bookmarkHandler')}">
 
             <input name="type" value="{$type}" hidden>
+            <input name="id" value="{$data[id]}" hidden>
 
             <div class="form-group">
                 <div class="input-group">
                     <label class="input-group-addon">标题</label>
-                    <input name="title" class="form-control" type="text" value="{}" placeholder="标题">
+                    <input name="title" class="form-control" type="text" value="{$data[title]}" placeholder="标题">
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="input-group">
                     <label class="input-group-addon">URL</label>
-                    <input name="url" class="form-control" type="text" value="{}" placeholder="URL">
+                    <input name="url" class="form-control" type="text" value="{$data[url]}" placeholder="URL">
                 </div>
             </div>
             <!-- url 编码处理 -->
