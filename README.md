@@ -6,4 +6,4 @@
 
 ## 开源协议
 
-[https://github.com/LittleJake/bookmark-demo/blob/master/LICENSE](Apache Licence Version 2.0)
+(Apache Licence Version 2.0)[https://github.com/LittleJake/bookmark-demo/blob/master/LICENSE]
