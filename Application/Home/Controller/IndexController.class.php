@@ -9,11 +9,10 @@ class IndexController extends BaseController
     {
         $this ->isLogin();
 
-        $bookmarks = array(array(
-            'id' => '1',
-            'title' => 'asd',
-            'url' => 'http://url.com/'
-        ));
+        $bookmark = D('bookmark');
+
+        $bookmarks = $bookmark ->query('select * from (select url,count(url) as c from bookmark group by url) as U where U.c > 2');
+
         $this->assign('bookmarks', $bookmarks);
         $this->assign('page_title','首页');
         return $this->display();
